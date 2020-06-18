@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div>
+    <h1>Transaction Item List</h1>
+</div>
+<table class="table-bordered table-dark">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Image</th>
+            <th>Title</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in transaction.trans_itemlists %}
+        <tr>
+            <td>{{ product.id }}</td>
+            <td><img src="{{ url_for('static',filename='img/' + product.image) }}" width="128" height="128"></td>
+            <td><a href="{{ url_for('product',id=product.id) }}">{{ product.title }}</a></td>
+            <td>{{ product.price }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<div class="row">
+    <div class="col-lg-4"><a href="{{ url_for('my_transaction') }}" class="btn btn-primary" role="button">Back</a></div>
+</div>
+{% endblock %}

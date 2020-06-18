@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-lg bg-dark">
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <div class="col-lg-2">{{ form.title.label(class="text-light") }}</div>
+        <div class="col-lg-6">{{ form.title(size=64,placeholder="Search for Title") }}<br>
+        {% for error in form.title.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+        </div>
+        <div class="col-lg-4">{{ form.submit() }}</div>
+    </form>
+
+</div>
+<div class="container-lg bg-dark">
+    <table class="table-bordered table-dark">
+        {% for product in products %}
+        <tr>
+            <td><a href="{{ url_for('product',id=product.id) }}">{{ product.title }}</a></td>
+            <td>{{ product.booktype }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+<div><a href="{{ url_for('index') }}" class="btn btn-primary" role="button">Back</a></div>
+{% endblock %}

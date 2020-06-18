@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<div>
+    <h1>My Cart</h1>
+</div>
+<table class="table-bordered table-dark">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Image</th>
+            <th>Title</th>
+            <th>Price</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in user.my_carts %}
+        <tr>
+            <td>{{ product.id }}</td>
+            <td><img src="{{ url_for('static',filename='img/' + product.image) }}" width="128" height="128"></td>
+            <td><a href="{{ url_for('product',id=product.id) }}">{{ product.title }}</a></td>
+            <td>{{ product.price }}</td>
+            <td><a href="{{ url_for('remove_from_cart',id=product.id) }}">Remove</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<div class="row">
+    <div class="col-lg-4"><a href="{{ url_for('check_out') }}" class="btn btn-primary" role="button">Check Out</a></div>
+    <div class="col-lg-4"><a href="{{ url_for('index') }}" class="btn btn-primary" role="button">Back</a></div>
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<div>
+    <h1>My Orders</h1>
+</div>
+<table class="table-bordered table-dark">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Total Price</th>
+            <th>Order Date</th>
+            <th>Payment Deadline</th>
+            <th>Payment Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+        <tr>
+            <td>{{ order.id }}</td>
+            <td>{{ order.total_price }}</td>
+            <td>{{ order.datestamp }}</td>
+            <td>{{ order.deadline }}</td>
+            <td>{{ order.status }}</td>
+            {% if order.status != 'Cancelled' %}
+            <td><a href="{{ url_for('my_order_list',id=order.id) }}">View</a></td>
+            {% else %}
+            <td>No Action</td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<div class="row">
+    <div class="col-lg-4"><a href="{{ url_for('index') }}" class="btn btn-primary" role="button">Back</a></div>
+</div>
+{% endblock %}

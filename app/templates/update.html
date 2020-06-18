@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Edit My Account</h1>
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.username.label }}<br>
+        {{ form.username(size=32,value=user.username) }}<br>
+        {% for error in form.username.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.email.label }}<br>
+        {{ form.email(size=64,value=user.email) }}<br>
+        {% for error in form.email.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.phone_num.label }}<br>
+        {{ form.phone_num(size=64,value=user.phone_number) }}<br>
+        {% for error in form.phone_num.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.oldpassword.label }}<br>
+        {{ form.oldpassword(size=32) }}<br>
+        {% for error in form.oldpassword.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.newpassword.label }}<br>
+        {{ form.newpassword(size=32) }}<br>
+        {% for error in form.newpassword.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.newpassword2.label }}<br>
+        {{ form.newpassword2(size=32) }}<br>
+        {% for error in form.newpassword2.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.submit() }}
+        <a href="{{ url_for('index') }}">Cancel</a>
+    </p>
+</form>
+{% endblock %}

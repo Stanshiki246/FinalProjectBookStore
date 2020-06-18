@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<div>
+    <h1>Payment Proof Form</h1>
+</div>
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <div>
+        {{ form.bank_account_name.label }}
+        {{ form.bank_account_name(size=64) }}<br>
+        {% for error in form.bank_account_name.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </div>
+    <div>
+        {{ form.bank_name.label }}
+        {{ form.bank_name(size=32) }}<br>
+        {% for error in form.bank_name.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </div>
+    <div>
+        {{ form.exact_price.label }}
+        {{ form.exact_price(size=32) }}<br>
+        {% for error in form.exact_price.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
+            {{ form.hours.label }} {{ form.hours(size=32) }}<br>
+            {% for error in form.hours.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </div>
+        <div class="col-lg-4">
+            {{ form.minutes.label }} {{ form.minutes(size=32) }}<br>
+            {% for error in form.minutes.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </div>
+    </div>
+    <div>
+        {{ form.submit() }}
+        <a href="{{ url_for('my_order') }}">Back</a>
+    </div>
+</form>
+{% endblock %}

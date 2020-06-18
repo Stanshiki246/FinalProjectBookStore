@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div>
+    <h1>Edit Product Details</h1>
+</div>
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.genres.label }}
+        {% for field in form.genres %}
+        {{ field }} {{ field.label }}
+        {% endfor %}<br>
+        {% for error in form.genres.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.synopsis.label }}<br>
+        {{ form.synopsis(rows=5,cols=50) }}<br>
+        {% for error in form.synopsis.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.submit() }}
+        <a href="{{ url_for('product',id=product.id) }}">Back</a>
+    </p>
+</form>
+{% endblock %}

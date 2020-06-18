@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<div>
+    <h1>My Library</h1>
+</div>
+<table class="table-bordered table-dark">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Image</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in user.my_libraries %}
+        <tr>
+            <td>{{ product.id }}</td>
+            <td><img src="{{ url_for('static',filename='img/' + product.image) }}" width="128" height="128"></td>
+            <td><a href="{{ url_for('product',id=product.id) }}">{{ product.title }}</a></td>
+            <td>{{ product.author }}</td>
+            {% if product.booktype == 'Comic' %}
+            {% if comic is not none %}
+            <td><a href="{{ url_for('read_comic',id=product.id,page=1) }}">Read</a></td>
+            {% endif %}
+            {% endif %}
+            {% if product.booktype == 'Novel' %}
+            <td><a href="{{ url_for('read_novel',id=product.id) }}">Read</a></td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<div class="row">
+    <div class="col-lg-4"><a href="{{ url_for('index') }}" class="btn btn-primary" role="button">Back</a></div>
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<div>
+    <h1>Order Item List</h1>
+    <h3>Username: {{ order.customer.username }}</h3>
+</div>
+<table class="table-bordered table-dark">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Image</th>
+            <th>Title</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in order.order_itemlists %}
+        <tr>
+            <td>{{ product.id }}</td>
+            <td><img src="{{ url_for('static',filename='img/' + product.image) }}" width="128" height="128"></td>
+            <td><a href="{{ url_for('product',id=product.id) }}">{{ product.title }}</a></td>
+            <td>{{ product.price }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<div>
+    <h3>Please transfer the money with exact amount of {{ order.total_price }} to the Bank Account with this format:</h3>
+    <h5>ABC: 456 - Stanley</h5>
+    <h5>Before {{ order.deadline }}</h5>
+</div>
+<div class="row">
+    {% if order.status == 'Unpaid' %}
+    <div class="col-lg-4"><a href="{{ url_for('payment_proof_form',id=order.id) }}" class="btn btn-primary" role="button">Pay</a></div>
+    <div class="col-lg-4"><a href="{{ url_for('cancel_order',id=order.id) }}" class="btn btn-primary" role="button">Cancel</a></div>
+    {% endif %}
+    <div class="col-lg-4"><a href="{{ url_for('my_order') }}" class="btn btn-primary" role="button">Back</a></div>
+</div>
+{% endblock %}

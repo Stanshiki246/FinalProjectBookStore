@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<div>
+    <h1>Manage Orders</h1>
+</div>
+<table class="table-bordered table-dark">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Total Price</th>
+            <th>Order Date</th>
+            <th>Customer ID</th>
+            <th>Payment Deadline</th>
+            <th>Payment Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+        <tr>
+            <td>{{ order.id }}</td>
+            <td>{{ order.total_price }}</td>
+            <td>{{ order.datestamp }}</td>
+            <td>{{ order.user_id }}</td>
+            <td>{{ order.deadline }}</td>
+            <td>{{ order.status }}</td>
+            {% if order.status == "Accepted" %}
+            <td><a href="{{ url_for('finish_orders',id=order.id) }}">Finish</a></td>
+            {% elif order.status == "Rejected" %}
+            <td><a href="{{ url_for('redo_orders',id=order.id) }}">Redo</a></td>
+            {% elif order.status == "Cancelled" %}
+            <td><a href="{{ url_for('clear_all_order_items',id=order.id) }}">Redo</a></td>
+            {% else %}
+            <td>No Action</td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<div class="row">
+    <div class="col-lg-4"><a href="{{ url_for('index') }}" class="btn btn-primary" role="button">Back</a></div>
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div>
+    <h1>Manage Transactions</h1>
+</div>
+<table class="table-bordered table-dark">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Total Price</th>
+            <th>Transaction Date</th>
+            <th>Customer ID</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for transaction in transactions %}
+        <tr>
+            <td>{{ transaction.id }}</td>
+            <td>{{ transaction.total_price }}</td>
+            <td>{{ transaction.datestamp }}</td>
+            <td>{{ transaction.user_id }}</td>
+            <td><a href="{{ url_for('manage_transaction_items', id=transaction.id) }}">View</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<div class="row">
+    <div class="col-lg-4"><a href="{{ url_for('index') }}" class="btn btn-primary" role="button">Back</a></div>
+</div>
+{% endblock %}
