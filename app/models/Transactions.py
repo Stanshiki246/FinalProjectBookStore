@@ -39,7 +39,6 @@ class Orders(db.Model):
     user_id=db.Column(db.Integer(),db.ForeignKey('trans_users.id'))
     order_itemlists=db.relationship('Trans_products',secondary=order_items,lazy='dynamic',
                                     backref=db.backref('order',lazy='dynamic'))
-    payment_proofs=db.relationship('PaymentProof',backref='order',lazy='dynamic')
 
     def is_in_order_itemlists(self,product):
         return self.order_itemlists.filter(order_items.c.product_id == product.id).count() > 0
@@ -55,16 +54,6 @@ class Orders(db.Model):
     def order_itemlists_is_empty(self):
         return self.order_itemlists.count() > 0
 
-
-
-class PaymentProof(db.Model):
-    __bind_key__ = 'transactions'
-    id=db.Column(db.Integer(),primary_key=True)
-    bank_account_name=db.Column(db.String(256),index=True,nullable=False)
-    bank_name=db.Column(db.String(128),index=True,nullable=False)
-    exact_money=db.Column(db.Integer,nullable=False)
-    transfer_datetime=db.Column(db.DateTime())
-    order_id=db.Column(db.Integer(),db.ForeignKey('orders.id'))
 
 class Transactions(db.Model):
     __bind_key__ = 'transactions'
