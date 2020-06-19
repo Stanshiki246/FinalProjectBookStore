@@ -472,8 +472,9 @@ def payment_proof_form(id):
         today=date.today()
         dtime=datetime.combine(today,proof_time)
         data={'bank_account_name': form.bank_account_name.data, 'bank_name': form.bank_name.data,
-                'exact_money': form.exact_price.data, 'transfer_datetime': dtime,'order_id': order.id}
-        res = requests.post('http://127.0.0.1:5000/payments/',data=data)
+                'exact_money': form.exact_price.data, 'transfer_datetime': dtime.strftime('%Y-%m-%d %H-%M')
+            ,'order_id': order.id}
+        res = requests.post('http://127.0.0.1:5000/payments/',json=data)
         if res.status_code == 201:
             order.status = 'Sent'
             db.session.commit()
