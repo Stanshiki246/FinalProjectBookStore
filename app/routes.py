@@ -485,7 +485,7 @@ def payment_proof_form(id):
 
 @app.route('/manage_payment',methods=['GET'])
 def manage_payment():
-    res = requests.get('http://127.0.0.1:5000/payments/')
+    res = requests.get('http://127.0.0.1:5000/payments/all')
     if res.status_code == 200:
         payments=res.json()
     else:
