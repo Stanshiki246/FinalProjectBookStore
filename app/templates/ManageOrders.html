@@ -34,12 +34,8 @@
             {% else %}
             <td>No Action</td>
             {% endif %}
-            {% if order is not none %}
             {% if order.status != 'Expired' and order.status != 'Done' and order.status != 'Cancelled' and order.status != 'Accepted' %}
             <td><a href="{{ url_for('check_deadline',id=order.id) }}">Check</a></td>
-            {% else %}
-            <td>No Action</td>
-            {% endif %}
             {% else %}
             <td>No Action</td>
             {% endif %}
