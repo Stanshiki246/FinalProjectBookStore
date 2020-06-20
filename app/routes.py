@@ -114,21 +114,29 @@ def add_product():
         GenreStr=""
         for i in form.genres.data:
             GenreStr += i+","
-        product=Products(title=form.title.data,price=price,booktype=form.bookTypes.data,image=form.image.data,
-                         genres=GenreStr,synopsis=form.synopsis.data,author=form.author.data)
-        db.session.add(product)
-        db.session.commit()
-        cart_product=Cart_products(title=product.title,price=product.price,image=product.image,product_id=product.id)
-        db.session.add(cart_product)
-        db.session.commit()
-        trans_product=Trans_products(title=product.title,price=product.price,image=product.image,product_id=product.id)
-        db.session.add(trans_product)
-        db.session.commit()
-        library_product=Library_products(title=product.title,image=product.image,author=product.author,product_id=product.id,
-                                         booktype=product.booktype)
-        db.session.add(library_product)
-        db.session.commit()
-        flash('Product has been added successfully')
+        data={'filename': form.image.data, 'title': form.title.data, 'author': form.author.data, 'booktype': form.bookTypes.data,
+              'price': price}
+        res = requests.post('http://127.0.0.1:5001/images/',json=data)
+        if res.status_code == 201:
+            product=Products(title=form.title.data,price=price,booktype=form.bookTypes.data,image=form.image.data,
+                             genres=GenreStr,synopsis=form.synopsis.data,author=form.author.data)
+            db.session.add(product)
+            db.session.commit()
+            cart_product=Cart_products(title=product.title,price=product.price,image=product.image,product_id=product.id)
+            db.session.add(cart_product)
+            db.session.commit()
+            trans_product=Trans_products(title=product.title,price=product.price,image=product.image,product_id=product.id)
+            db.session.add(trans_product)
+            db.session.commit()
+            library_product=Library_products(title=product.title,image=product.image,author=product.author,product_id=product.id,
+                                             booktype=product.booktype)
+            db.session.add(library_product)
+            db.session.commit()
+            flash('Product has been added successfully')
+        elif res.status_code == 400:
+            flash('Data needs more fields to be filled')
+        else:
+            flash('Try again')
         return redirect(url_for('index'))
     return render_template('AddProduct.html',title="Add Product",form=form)
 
@@ -137,26 +145,32 @@ def add_product():
 def delete_product(id):
     product=Products.query.filter_by(id=id).first_or_404()
     if product is not None:
-        cart_product=Cart_products.query.filter_by(product_id=id).first_or_404()
-        if cart_product is not None:
-            db.session.delete(cart_product)
-            db.session.commit()
-        trans_product=Trans_products.query.filter_by(product_id=id).first_or_404()
-        if trans_product is not None:
-            db.session.delete(trans_product)
-            db.session.commit()
-        library_product=Library_products.query.filter_by(product_id=id).first_or_404()
-        if library_product is not None:
-            db.session.delete(library_product)
-            db.session.commit()
-        if product.booktype == 'Comic':
-            comics=Comics.query.filter_by(product_id=id).all()
-            if comics is not None:
-                db.session.query(Comics).filter_by(product_id=id).delete()
+        res=requests.delete('http://127.0.0.1:5001/payments/' + product.image)
+        if res.status_code == 200:
+            cart_product=Cart_products.query.filter_by(product_id=id).first_or_404()
+            if cart_product is not None:
+                db.session.delete(cart_product)
                 db.session.commit()
-        db.session.delete(product)
-        db.session.commit()
-        flash('Product has been deleted successfully')
+            trans_product=Trans_products.query.filter_by(product_id=id).first_or_404()
+            if trans_product is not None:
+                db.session.delete(trans_product)
+                db.session.commit()
+            library_product=Library_products.query.filter_by(product_id=id).first_or_404()
+            if library_product is not None:
+                db.session.delete(library_product)
+                db.session.commit()
+            if product.booktype == 'Comic':
+                comics=Comics.query.filter_by(product_id=id).all()
+                if comics is not None:
+                    db.session.query(Comics).filter_by(product_id=id).delete()
+                    db.session.commit()
+            db.session.delete(product)
+            db.session.commit()
+            flash('Product has been deleted successfully')
+        elif res.status_code == 400:
+            flash('Item is not found')
+        else:
+            flash('Try again')
     else:
         flash('Nothing is in this list')
     return redirect(url_for('index'))
@@ -383,70 +397,6 @@ def remove_from_cart(id):
     flash('Removed from Cart Successfully')
     return redirect(url_for('my_cart'))
 
-@app.route('/set_all_up')
-@login_required
-def set_all_up():
-    CustomerList=[]
-    customers=Customers.query.all()
-    for customer in customers:
-        cart_customer=Cart_customers.query.filter_by(user_id=customer.user_id).first_or_404()
-        if cart_customer is None:
-            new_cart_customer=Cart_customers(user_id=customer.user_id)
-            CustomerList.append(new_cart_customer)
-    db.session.add_all(CustomerList)
-    db.session.commit()
-    CustomerList.clear()
-    ProductList=[]
-    products=Products.query.all()
-    for product in products:
-        cart_product=Cart_products.query.filter_by(product_id=product.id).first_or_404()
-        if cart_product is None:
-            new_cart_product=Cart_products(title=product.title,price=product.price,image=product.image,product_id=product.id)
-            ProductList.append(new_cart_product)
-    db.session.add_all(ProductList)
-    db.session.commit()
-    ProductList.clear()
-    customers=Users.query.filter_by(usertype='Customer').all()
-    for customer in customers:
-        trans_customer=Trans_users.query.filter_by(user_id=customer.id).first_or_404()
-        if trans_customer is None:
-            new_trans_customer=Trans_users(username=customer.username,first_name=customer.first_name,
-                                           last_name=customer.last_name,email=customer.email,
-                                           phone_number=customer.phone_number,user_id=customer.id)
-            CustomerList.append(new_trans_customer)
-    db.session.add_all(CustomerList)
-    db.session.commit()
-    CustomerList.clear()
-    products=Products.query.all()
-    for product in products:
-        trans_product=Trans_products.query.filter_by(product_id=product.id).first_or_404()
-        if trans_product is None:
-            new_trans_product=Trans_products(title=product.title,price=product.price,image=product.image,product_id=product.id)
-            ProductList.append(new_trans_product)
-    db.session.add_all(ProductList)
-    db.session.commit()
-    ProductList.clear()
-    customers=Customers.query.all()
-    for customer in customers:
-        library_customer=Library_customers.query.filter_by(user_id=customer.user_id).first_or_404()
-        if library_customer is None:
-            new_library_customer=Library_customers(user_id=customer.user_id)
-            CustomerList.append(new_library_customer)
-    db.session.add_all(CustomerList)
-    db.session.commit()
-    CustomerList.clear()
-    products=Products.query.all()
-    for product in products:
-        library_product=Library_products.query.filter_by(product_id=product.id).first_or_404()
-        if library_product is None:
-            new_library_product=Library_products(title=product.title,image=product.image,author=product.author,product_id=product.id)
-            ProductList.append(new_library_product)
-    db.session.add_all(ProductList)
-    db.session.commit()
-    ProductList.clear()
-    flash('All have been set up')
-    return redirect(url_for('index'))
-
 #Render My Order
 @app.route('/my_order')
 @login_required
@@ -514,6 +464,8 @@ def payment_proof_form(id):
             order.status = 'Sent'
             db.session.commit()
             flash('Payment Proof has been sent successfully. Please wait for the confirmation')
+        elif res.status_code == 400:
+            flash('Data needs more fields to be filled')
         else:
             flash('Try again')
         return redirect(url_for('my_order'))
@@ -543,6 +495,8 @@ def accept_payment(id):
         order.status = 'Accepted'
         db.session.commit()
         flash('Finish the order now')
+    elif res.status_code == 400:
+        flash('Payment Proof is not found')
     else:
         flash('Try again')
     return redirect(url_for('manage_orders'))
@@ -556,6 +510,8 @@ def reject_payment(id):
         order.status = 'Rejected'
         db.session.commit()
         flash('Redo the order now')
+    elif res.status_code == 400:
+        flash('Payment Proof is not found')
     else:
         flash('Try again')
     return redirect(url_for('manage_orders'))
