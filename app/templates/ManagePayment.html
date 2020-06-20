@@ -6,19 +6,19 @@
 <table class="table-bordered table-dark">
     <thead>
         <tr>
-            <th>ID</th>
             <th>Bank Account Owner</th>
             <th>Bank Name</th>
             <th>Exact Amount of Money</th>
-            <th>Transfer Date</th>
+            <th>ID</th>
             <th>Order ID</th>
+            <th>Transfer Date</th>
             <th colspan="2">Actions</th>
         </tr>
     </thead>
     <tbody>
         {% for payment in payments %}
         <tr>
-            {% for key,value in payment.item() %}
+            {% for key,value in payment.items() %}
             <td>{{ value }}</td>
             {% endfor %}
             <td><a href="{{ url_for('accept_payment',id=payment['order_id']) }}">Accept</a></td>
