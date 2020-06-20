@@ -22,7 +22,7 @@
             <td>{{ order.datestamp }}</td>
             <td>{{ order.deadline }}</td>
             <td>{{ order.status }}</td>
-            {% if order.status != 'Cancelled' %}
+            {% if order.status != 'Cancelled' and order.status != 'Done' %}
             <td><a href="{{ url_for('my_order_list',id=order.id) }}">View</a></td>
             {% else %}
             <td>No Action</td>

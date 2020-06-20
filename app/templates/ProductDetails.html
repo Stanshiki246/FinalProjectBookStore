@@ -55,6 +55,13 @@
     <div class="col-lg-3"><a href="{{ url_for('my_cart') }}" role="button" class="btn btn-primary">
         Check on My Cart</a></div>
     {% endif %}
+    {% if customer is not none %}
+    {% if not customer.is_in_wishlist(product) %}
+    <div class="col-lg-3"><a href="{{ url_for('add_into_wishlist',id=product.id) }}" role="button" class="btn btn-primary">Add to My Wish List</a></div>
+    {% else %}
+    <div class="col-lg-3"><a href="{{ url_for('my_wishlist') }}" role="button" class="btn btn-primary">Check on My Wish List</a></div>
+    {% endif %}
+    {% endif %}
     {% else %}
     <div class="col-lg-3">
         <a href="{{ url_for('my_library') }}" class="btn btn-primary" role="button">Go To My Library</a></div>

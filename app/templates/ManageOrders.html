@@ -29,7 +29,7 @@
             {% elif order.status == "Rejected" %}
             <td><a href="{{ url_for('redo_orders',id=order.id) }}">Redo</a></td>
             {% elif order.status == "Cancelled" %}
-            <td><a href="{{ url_for('clear_all_order_items',id=order.id) }}">Redo</a></td>
+            <td><a href="{{ url_for('clear_all_order_items',id=order.id) }}">Clear All</a></td>
             {% else %}
             <td>No Action</td>
             {% endif %}

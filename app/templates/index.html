@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-    <h1>Hi, {{ current_user.username }}!</h1>
+    <h1>Welcome to HOBIKU Online Book Store</h1>
     {% if current_user.usertype == 'Admin' %}
     <table class="table-bordered table-dark">
         <thead>
@@ -52,12 +52,6 @@
                     </p>
                     {% if current_user.usertype == 'Admin' or current_user.usertype == 'Staff' %}
                     <p class="card-text"><a href="{{ url_for('delete_product',id=product.id) }}">Remove</a></p>
-                    {% else %}
-                    {% if not customer.is_in_wishlist(product) %}
-                    <p class="card-text"><a href="{{ url_for('add_into_wishlist',id=product.id) }}">Add to My Wish List</a></p>
-                    {% else %}
-                    <p class="card-text"><a href="{{ url_for('my_wishlist') }}">Check on My Wish List</a></p>
-                    {% endif %}
                     {% endif %}
                 </div>
             </div>

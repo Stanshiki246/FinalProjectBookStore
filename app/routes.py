@@ -13,13 +13,11 @@ import requests
 
 @app.route('/',methods=['GET','POST'])
 @app.route('/index',methods=['GET','POST'])
-@login_required
 def index():
     form=SearchTitle()
     if form.validate_on_submit():
         return redirect(url_for('search_product',name=form.title.data.replace(' ','+')))
-    return render_template('index.html', title='Home',users=Users.query.all(),products=Products.query.all(),form=form,
-                           customer=Customers.query.filter_by(user_id=current_user.id).first())
+    return render_template('index.html', title='Home',users=Users.query.all(),products=Products.query.all(),form=form)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -192,14 +190,16 @@ def update(id):
 @app.route('/product/<int:id>')
 @login_required
 def product(id):
-    #customer=Trans_users.query.filter_by(user_id=current_user.id).first()
+    if current_user.usertype == 'Customer':
+        customer=Customers.query.filter_by(user_id=current_user.id).first_or_404()
+    else:
+        customer=Customers.query.filter_by(user_id=current_user.id).first()
     return render_template('ProductDetails.html',title='Product Details',product=Products.query.filter_by(id=id).first_or_404(),
                            cart_customer=Cart_customers.query.filter_by(user_id=current_user.id).first_or_404(),
                            cart_product=Cart_products.query.filter_by(product_id=id).first_or_404(),
                            library_customer=Library_customers.query.filter_by(user_id=current_user.id).first_or_404(),
-                           library_product=Library_products.query.filter_by(product_id=id).first_or_404()
-                           #order_product=Trans_products.query.filter_by(product_id=id).first(),
-                           #orders=Orders.query.filter_by(customer=customer).all()
+                           library_product=Library_products.query.filter_by(product_id=id).first_or_404(),
+                           customer=customer
                            )
 
 @app.route('/read_novel/<int:id>')
@@ -354,11 +354,23 @@ def my_cart():
 @app.route('/add_into_cart/<int:id>')
 @login_required
 def add_into_cart(id):
-    cart_customer=Cart_customers.query.filter_by(user_id=current_user.id).first_or_404()
-    cart_product=Cart_products.query.filter_by(product_id=id).first_or_404()
-    cart_customer.add_into_my_carts(cart_product)
-    db.session.commit()
-    flash('Added into Cart Successfully')
+    customer=Trans_users.query.filter_by(user_id=current_user.id).first_or_404()
+    orders=Orders.query.filter_by(customer=customer).all()
+    order_product=Trans_products.query.filter_by(product_id=id).first_or_404()
+    order_found=False
+    for order in orders:
+        if order.status == 'Unpaid' or order.status == 'Sent':
+            if order.is_in_order_itemlists(order_product):
+                order_found=True
+                break
+    if not order_found:
+        cart_customer=Cart_customers.query.filter_by(user_id=current_user.id).first_or_404()
+        cart_product=Cart_products.query.filter_by(product_id=id).first_or_404()
+        cart_customer.add_into_my_carts(cart_product)
+        db.session.commit()
+        flash('Added into Cart Successfully')
+    else:
+        flash('It is already in the current order')
     return redirect(url_for('product',id=id))
 
 @app.route('/remove_from_cart/<int:id>')
@@ -481,6 +493,7 @@ def cancel_order(id):
     order=Orders.query.filter_by(id=id,customer=customer).first_or_404()
     order.status="Cancelled"
     db.session.commit()
+    flash('Order has been cancelled')
     return redirect(url_for('my_order'))
 #Render Payment Proof Form
 @app.route('/payment_proof_form/<int:id>',methods=['GET','POST'])
@@ -579,10 +592,13 @@ def redo_orders(id):
 @login_required
 def clear_all_order_items(id):
     order=Orders.query.filter_by(id=id).first_or_404()
-    for item in order.order_itemlists:
-        order.remove_from_order_itemlists(item)
-        db.session.commit()
-    flash('All order items have been cleared')
+    if order.order_itemlists_is_empty():
+        for item in order.order_itemlists:
+            order.remove_from_order_itemlists(item)
+            db.session.commit()
+        flash('All order items have been cleared')
+    else:
+        flash('No items are in this order')
     return redirect(url_for('manage_orders'))
 
 #Render My Transaction
@@ -602,6 +618,11 @@ def manage_transactions():
 @login_required
 def send_products(id,product_id):
     transaction=Transactions.query.filter_by(id=id).first_or_404()
+    customer=Customers.query.filter_by(id=transaction.user_id).first_or_404()
+    wishlist_product=Products.query.filter_by(id=product_id).first_or_404()
+    if customer.is_in_my_wishlist(wishlist_product):
+        customer.remove_from_wishlist(wishlist_product)
+        db.session.commit()
     library=Library_customers.query.filter_by(id=transaction.user_id).first_or_404()
     library_product=Library_products.query.filter_by(product_id=product_id).first_or_404()
     if not library.is_in_my_library(library_product):
