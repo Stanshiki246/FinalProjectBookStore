@@ -445,6 +445,7 @@ def cancel_order(id):
     db.session.commit()
     flash('Order has been cancelled')
     return redirect(url_for('my_order'))
+
 #Render Payment Proof Form
 @app.route('/payment_proof_form/<int:id>',methods=['GET','POST'])
 @login_required
@@ -485,6 +486,22 @@ def manage_payment():
 @login_required
 def manage_orders():
     return render_template('ManageOrders.html',title='Manage Orders',orders=Orders.query.all())
+
+@app.route('/check_deadline/<int:id>')
+@login_required
+def check_deadline(id):
+    order=Orders.query.filter_by(id=id).first_or_404()
+    if datetime.now() > order.deadline:
+        order.status = 'Expired'
+        db.session.commit()
+        if order.order_itemlists_is_empty():
+            for item in order.order_itemlists:
+                order.remove_from_order_itemlists(item)
+                db.session.commit()
+        flash('Order is expired now')
+    else:
+        flash('Order is not expired yet')
+    return redirect(url_for('manage_orders'))
 
 @app.route('/accept_payment/<int:id>',methods=["GET","DELETE"])
 @login_required

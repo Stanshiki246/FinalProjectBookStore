@@ -13,6 +13,7 @@
             <th>Payment Deadline</th>
             <th>Payment Status</th>
             <th>Action</th>
+            <th>Deadline Action</th>
         </tr>
     </thead>
     <tbody>
@@ -30,6 +31,15 @@
             <td><a href="{{ url_for('redo_orders',id=order.id) }}">Redo</a></td>
             {% elif order.status == "Cancelled" %}
             <td><a href="{{ url_for('clear_all_order_items',id=order.id) }}">Clear All</a></td>
+            {% else %}
+            <td>No Action</td>
+            {% endif %}
+            {% if order is not none %}
+            {% if order.status != 'Expired' and order.status != 'Done' and order.status != 'Cancelled' and order.status != 'Accepted' %}
+            <td><a href="{{ url_for('check_deadline',id=order.id) }}">Check</a></td>
+            {% else %}
+            <td>No Action</td>
+            {% endif %}
             {% else %}
             <td>No Action</td>
             {% endif %}
