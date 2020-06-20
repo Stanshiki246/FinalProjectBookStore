@@ -593,7 +593,7 @@ def send_products(id,product_id):
     transaction=Transactions.query.filter_by(id=id).first_or_404()
     customer=Customers.query.filter_by(id=transaction.user_id).first_or_404()
     wishlist_product=Products.query.filter_by(id=product_id).first_or_404()
-    if customer.is_in_my_wishlist(wishlist_product):
+    if customer.is_in_wishlist(wishlist_product):
         customer.remove_from_wishlist(wishlist_product)
         db.session.commit()
     library=Library_customers.query.filter_by(id=transaction.user_id).first_or_404()
