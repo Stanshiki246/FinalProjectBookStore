@@ -116,7 +116,7 @@ def add_product():
             GenreStr += i+","
         data={'filename': form.image.data, 'title': form.title.data, 'author': form.author.data, 'booktype': form.bookTypes.data,
               'price': price}
-        res = requests.post('http://127.0.0.1:5001/images/',json=data)
+        res = requests.post('http://0.0.0.0:5001/images/',json=data)
         if res.status_code == 201:
             product=Products(title=form.title.data,price=price,booktype=form.bookTypes.data,image=form.image.data,
                              genres=GenreStr,synopsis=form.synopsis.data,author=form.author.data)
@@ -145,7 +145,7 @@ def add_product():
 def delete_product(id):
     product=Products.query.filter_by(id=id).first_or_404()
     if product is not None:
-        res=requests.delete('http://127.0.0.1:5001/payments/' + product.image)
+        res=requests.delete('http://0.0.0.0:5001/payments/' + product.image)
         if res.status_code == 200:
             cart_product=Cart_products.query.filter_by(product_id=id).first_or_404()
             if cart_product is not None:
@@ -460,7 +460,7 @@ def payment_proof_form(id):
         data={'bank_account_name': form.bank_account_name.data, 'bank_name': form.bank_name.data,
                 'exact_money': form.exact_price.data, 'transfer_datetime': dtime.strftime('%Y-%m-%d %H:%M')
             ,'order_id': order.id}
-        res = requests.post('http://127.0.0.1:5001/payments/',json=data)
+        res = requests.post('http://0.0.0.0:5001/payments/',json=data)
         if res.status_code == 201:
             order.status = 'Sent'
             db.session.commit()
@@ -506,7 +506,7 @@ def check_deadline(id):
 @app.route('/accept_payment/<int:id>',methods=["GET","DELETE"])
 @login_required
 def accept_payment(id):
-    res = requests.delete('http://127.0.0.1:5001/payments/'+str(id))
+    res = requests.delete('http://0.0.0.0:5001/payments/'+str(id))
     if res.status_code == 200:
         order=Orders.query.filter_by(id=id).first_or_404()
         order.status = 'Accepted'
@@ -521,7 +521,7 @@ def accept_payment(id):
 @app.route('/reject_payment/<int:id>',methods=["GET","DELETE"])
 @login_required
 def reject_payment(id):
-    res = requests.delete('http://127.0.0.1:5001/payments/'+str(id))
+    res = requests.delete('http://0.0.0.0:5001/payments/'+str(id))
     if res.status_code == 200:
         order=Orders.query.filter_by(id=id).first_or_404()
         order.status = 'Rejected'
