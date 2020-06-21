@@ -45,9 +45,9 @@
             <div class="card">
                 <div class="card-image">
                     <img src="{{ url_for('static',filename='img/' + product.image) }}" width="256" height="512">
-                    <span class="card-title"><a href="{{ url_for('product',id=product.id) }}" class="white-text">{{ product.title }}</a></span>
                 </div>
                 <div class="card-content">
+                    <h1 class="card-title"><a href="{{ url_for('product',id=product.id) }}" class="purple-text text-darken-3">{{ product.title }}</a></h1>
                     <p>ID: {{ product.id }}<br>Type: {{ product.booktype }}<br>
                     Date: {{ product.updated_at }}<br>Price: {{ product.price }}<br>
                     </p>
