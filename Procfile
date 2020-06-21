@@ -1,1 +1,1 @@
-web: FLASK_APP = main.py python -m flask run
+web: GUNICORN_CMD_ARGS="--bind=127.0.0.1 --workers=3" gunicorn main:app
