@@ -5,7 +5,7 @@ from flask_login import current_user,login_user,logout_user,login_required
 from app.models.Users import Users
 from app.models.Products import Customers,Products
 from app.models.Carts import Cart_customers,Cart_products
-from app.models.Transactions import Trans_products,Trans_users,Transactions,Orders
+from app.models.Transactions import Trans_products,Trans_users,Transactions,Orders,PaymentProofs
 from app.models.Libraries import Library_customers,Library_products,Comics
 from werkzeug.urls import url_parse
 from datetime import datetime,time,date,timedelta
@@ -114,8 +114,10 @@ def add_product():
         GenreStr=""
         for i in form.genres.data:
             GenreStr += i+","
+        '''
         data={'filename': form.image.data, 'title': form.title.data, 'author': form.author.data, 'booktype': form.bookTypes.data,
               'price': price}
+        
         #res = requests.post('https://doc.hobiku.shop/images/',json=data)
         res = requests.post('http://127.0.0.1:5001/images/',json=data)
         if res.status_code == 201:
@@ -138,12 +140,30 @@ def add_product():
             flash('Data needs more fields to be filled')
         else:
             flash('Try again')
+        '''
+        #without microservices
+        product=Products(title=form.title.data,price=price,booktype=form.bookTypes.data,image=form.image.data,
+                             genres=GenreStr,synopsis=form.synopsis.data,author=form.author.data)
+        db.session.add(product)
+        db.session.commit()
+        cart_product=Cart_products(title=product.title,price=product.price,image=product.image,product_id=product.id)
+        db.session.add(cart_product)
+        db.session.commit()
+        trans_product=Trans_products(title=product.title,price=product.price,image=product.image,product_id=product.id)
+        db.session.add(trans_product)
+        db.session.commit()
+        library_product=Library_products(title=product.title,image=product.image,author=product.author,product_id=product.id,
+                                         booktype=product.booktype)
+        db.session.add(library_product)
+        db.session.commit()
+        flash('Product has been added successfully')
         return redirect(url_for('index'))
     return render_template('AddProduct.html',title="Add Product",form=form)
 
 @app.route('/delete_product/<int:id>')
 @login_required
 def delete_product(id):
+    '''
     product=Products.query.filter_by(id=id).first_or_404()
     if product is not None:
         #res=requests.delete('https://doc.hobiku.shop/images/' + product.image)
@@ -173,6 +193,32 @@ def delete_product(id):
             flash('Item is not found')
         else:
             flash('Try again')
+    else:
+        flash('Nothing is in this list')
+    '''
+    #without microservices
+    product=Products.query.filter_by(id=id).first_or_404()
+    if product is not None:
+        cart_product=Cart_products.query.filter_by(product_id=id).first_or_404()
+        if cart_product is not None:
+            db.session.delete(cart_product)
+            db.session.commit()
+        trans_product=Trans_products.query.filter_by(product_id=id).first_or_404()
+        if trans_product is not None:
+            db.session.delete(trans_product)
+            db.session.commit()
+        library_product=Library_products.query.filter_by(product_id=id).first_or_404()
+        if library_product is not None:
+            db.session.delete(library_product)
+            db.session.commit()
+        if product.booktype == 'Comic':
+            comics=Comics.query.filter_by(product_id=id).all()
+            if comics is not None:
+                db.session.query(Comics).filter_by(product_id=id).delete()
+                db.session.commit()
+        db.session.delete(product)
+        db.session.commit()
+        flash('Product has been deleted successfully')
     else:
         flash('Nothing is in this list')
     return redirect(url_for('index'))
@@ -459,6 +505,14 @@ def payment_proof_form(id):
         proof_time=time(form.hours.data,form.minutes.data)
         today=date.today()
         dtime=datetime.combine(today,proof_time)
+        #Without microservices
+        payment=PaymentProofs(bank_account_name=form.bank_account_name.data,bank_name=form.bank_name.data,
+                              exact_money=form.exact_price.data,transfer_date=dtime.strftime('%Y-%m-%d %H:%M'),
+                              order_id=order.id)
+        db.session.add(payment)
+        db.session.commit()
+        flash('Payment Proof has been sent successfully. Please wait for the confirmation')
+        '''
         data={'bank_account_name': form.bank_account_name.data, 'bank_name': form.bank_name.data,
                 'exact_money': form.exact_price.data, 'transfer_datetime': dtime.strftime('%Y-%m-%d %H:%M')
             ,'order_id': order.id}
@@ -472,12 +526,14 @@ def payment_proof_form(id):
             flash('Data needs more fields to be filled')
         else:
             flash('Try again')
+        '''
         return redirect(url_for('my_order'))
     return render_template('PaymentProof.html',title='Payment Proof Form',form=form)
 
 @app.route('/manage_payment',methods=['GET'])
 @login_required
 def manage_payment():
+    '''
     #res = requests.get('https://doc.hobiku.shop/payments/all')
     res = requests.get('https://127.0.0.1:5001/payments/all')
     if res.status_code == 200:
@@ -485,6 +541,10 @@ def manage_payment():
     else:
         payments={'Results':[]}
     return render_template('ManagePayment.html',title='Manage Payment',payments=payments['Results'])
+    '''
+    #without microservices
+    payments=PaymentProofs.query.all()
+    return render_template('ManagePayment.html',title='Manage Payment',payments=payments)
 
 @app.route('/manage_orders')
 @login_required
@@ -510,6 +570,7 @@ def check_deadline(id):
 @app.route('/accept_payment/<int:id>',methods=["GET","DELETE"])
 @login_required
 def accept_payment(id):
+    '''
     #res = requests.delete('https://doc.hobiku.shop/payments/'+str(id))
     res = requests.delete('https://127.0.0.1:5001/payments/'+str(id))
     if res.status_code == 200:
@@ -521,11 +582,24 @@ def accept_payment(id):
         flash('Payment Proof is not found')
     else:
         flash('Try again')
+    '''
+    #Without microservices
+    payment=PaymentProofs.query.filter_by(order_id=id).first_or_404()
+    if payment is not None:
+        db.session.delete(payment)
+        db.session.commit()
+        order=Orders.query.filter_by(id=id).first_or_404()
+        order.status = 'Accepted'
+        db.session.commit()
+        flash('Finish the order now')
+    else:
+        flash('Payment Proof is not found')
     return redirect(url_for('manage_orders'))
 
 @app.route('/reject_payment/<int:id>',methods=["GET","DELETE"])
 @login_required
 def reject_payment(id):
+    '''
     #res = requests.delete('https://doc.hobiku.shop/payments/'+str(id))
     res = requests.delete('https://127.0.0.1:5001/payments/'+str(id))
     if res.status_code == 200:
@@ -537,6 +611,18 @@ def reject_payment(id):
         flash('Payment Proof is not found')
     else:
         flash('Try again')
+    '''
+    #Without microservices
+    payment=PaymentProofs.query.filter_by(order_id=id).first_or_404()
+    if payment is not None:
+        db.session.delete(payment)
+        db.session.commit()
+        order=Orders.query.filter_by(id=id).first_or_404()
+        order.status = 'Rejected'
+        db.session.commit()
+        flash('Redo the order now')
+    else:
+        flash('Payment Proof is not found')
     return redirect(url_for('manage_orders'))
 
 @app.route('/finish_orders/<int:id>')

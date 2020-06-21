@@ -77,3 +77,13 @@ class Transactions(db.Model):
 
     def clear_trans_itemlists(self):
         self.trans_itemlists.clear()
+
+class PaymentProofs(db.Model):
+    __bind_key__ = 'transactions'
+    id=db.Column(db.Integer(),primary_key=True)
+    bank_account_name=db.Column(db.String(256),nullable=False,index=True)
+    bank_name=db.Column(db.String(256),nullable=False,index=True)
+    exact_money=db.Column(db.Integer(),nullable=False)
+    transfer_date=db.Column(db.String(128),nullable=False)
+    order_id=db.Column(db.Integer(),nullable=False)
+

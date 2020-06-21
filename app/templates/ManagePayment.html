@@ -18,9 +18,12 @@
     <tbody>
         {% for payment in payments %}
         <tr>
-            {% for key,value in payment.items() %}
-            <td>{{ value }}</td>
-            {% endfor %}
+            <td>{{ payment.bank_account_name }}</td>
+            <td>{{ payment.bank_name }}</td>
+            <td>{{ payment.exact_money }}</td>
+            <td>{{ payment.id }}</td>
+            <td>{{ payment.order_id }}</td>
+            <td>{{ payment.transfer_date }}</td>
             <td><a href="{{ url_for('accept_payment',id=payment['order_id']) }}">Accept</a></td>
             <td><a href="{{ url_for('reject_payment',id=payment['order_id']) }}">Reject</a></td>
         </tr>
