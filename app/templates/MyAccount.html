@@ -25,8 +25,8 @@
         <td>{{ current_user.updated_at }}</td>
     </tr>
     <tr>
-        <td><a href="{{ url_for('update',id=current_user.id) }}" role="button" class="waves-effect waves-light btn">Edit</a></td>
-        <td><a href="{{ url_for('index') }}" role="button" class="waves-effect waves-light btn">Back</a></td>
+        <td><a href="{{ url_for('update',id=current_user.id) }}" role="button" class="waves-effect waves-light btn green darken-2">Edit</a></td>
+        <td><a href="{{ url_for('index') }}" role="button" class="waves-effect waves-light btn green darken-2">Back</a></td>
     </tr>
 </table>
 {% endblock %}

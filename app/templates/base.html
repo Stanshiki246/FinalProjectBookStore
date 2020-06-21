@@ -10,17 +10,8 @@
         <link rel="stylesheet" href="{{ url_for('static',filename='/materialize/css/materialize.min.css') }}">
         <script src="{{ url_for('static',filename='/materialize/js/materialize.min.js') }}"></script>
     </head>
-    <body class="grey lighten-1">
-        {% if current_user.usertype == 'Customer' %}
-        <ul id="dropdown1" class="dropdown-content">
-            <li><a href="{{ url_for('my_profile') }}">My Profile</a></li>
-            <li><a href="{{ url_for('my_library') }}">My Library</a></li>
-            <li><a href="{{ url_for('my_transaction') }}">My Transactions</a></li>
-            <li><a href="{{ url_for('my_cart') }}">My Carts</a></li>
-            <li><a href="{{ url_for('my_order') }}">My Orders</a></li>
-        </ul>
-        {% endif %}
-        <nav>
+    <body class="orange lighten-1">
+        <nav class="nav-extended">
           <div class="nav-wrapper">
               <a class="brand-logo" href="{{ url_for('index') }}">HOBIKU</a>
             <ul class="right hide-on-med-and-down">
@@ -52,16 +43,20 @@
                 <li>
                   <a href="{{ url_for('manage_transactions') }}">Manage Transactions</a>
                 </li>
-                {% endif %}
-                {% if current_user.usertype == 'Customer' %}
-              <li>
-                <a class="dropdown-trigger" href="#!" data-target="dropdown1">
-                  Features<i class="material-icons right">arrow_drop_down</i>
-                </a>
-              </li>
-                {% endif %}
+                 {% endif %}
             </ul>
           </div>
+            {% if current_user.usertype == 'Customer' %}
+            <div class="nav-wrapper">
+                 <ul class="left hide-on-med-and-down">
+                    <li><a href="{{ url_for('my_profile') }}">My Profile</a></li>
+                    <li><a href="{{ url_for('my_library') }}">My Library</a></li>
+                    <li><a href="{{ url_for('my_transaction') }}">My Transactions</a></li>
+                    <li><a href="{{ url_for('my_cart') }}">My Carts</a></li>
+                    <li><a href="{{ url_for('my_order') }}">My Orders</a></li>
+                </ul>
+            </div>
+            {% endif %}
         </nav>
         <hr>
         {% with messages = get_flashed_messages() %}

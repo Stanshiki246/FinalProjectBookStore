@@ -23,17 +23,17 @@
 <div class="container teal lighten-2">
     <div class="row">
         {% if page != 1 %}
-        <div class="col l4"><a href="{{ url_for('read_comic',id=product.id,page=page-1) }}" class="waves-effect waves-light btn" role="button">Prev</a></div>
+        <div class="col l4"><a href="{{ url_for('read_comic',id=product.id,page=page-1) }}" class="waves-effect waves-light btn green darken-2" role="button">Prev</a></div>
         {% endif %}
         <div class="col l4">{{ page }} of {{ pages }}</div>
         {% if page != pages %}
-        <div class="col l4"><a href="{{ url_for('read_comic',id=product.id,page=page+1) }}" class="waves-effect waves-light btn" role="button">Next</a></div>
+        <div class="col l4"><a href="{{ url_for('read_comic',id=product.id,page=page+1) }}" class="waves-effect waves-light btn green darken-2" role="button">Next</a></div>
         {% endif %}
     </div>
 </div>
 <div class="row">
-    <div class="col l3"><h2><a href="{{ url_for('static',filename='/comic/' + product.title|replace(' ','_') + '.zip') }}" class="waves-effect waves-light btn" role="button" download="">Download</a></h2></div>
-    <div class="col l3"><h2><a href="{{ url_for('my_library') }}" class="waves-effect waves-light btn" role="button">Back</a></h2></div>
+    <div class="col l3"><h2><a href="{{ url_for('static',filename='/comic/' + product.title|replace(' ','_') + '.zip') }}" class="waves-effect waves-light btn green darken-2" role="button" download="">Download</a></h2></div>
+    <div class="col l3"><h2><a href="{{ url_for('my_library') }}" class="waves-effect waves-light btn green darken-2" role="button">Back</a></h2></div>
 </div>
 
 {% endblock %}

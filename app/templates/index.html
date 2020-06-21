@@ -29,7 +29,7 @@
         <form action="" method="post">
             {{ form.hidden_tag() }}
             <div class="row">
-                <div class="col l2">{{ form.title.label(class="text-light") }}</div>
+                <div class="col l2">{{ form.title.label(class="white-text") }}</div>
                 <div class="col l6">{{ form.title(size=64,placeholder="Search for Title") }}<br>
                 {% for error in form.title.errors %}
                 <span style="color: red;">[{{ error }}]</span>
@@ -45,7 +45,7 @@
             <div class="card">
                 <div class="card-image">
                     <img src="{{ url_for('static',filename='img/' + product.image) }}" width="256" height="512">
-                    <span class="card-title"><a href="{{ url_for('product',id=product.id) }}" class="teal lighten-2">{{ product.title }}</a></span>
+                    <span class="card-title"><a href="{{ url_for('product',id=product.id) }}" class="white-text">{{ product.title }}</a></span>
                 </div>
                 <div class="card-content">
                     <p>ID: {{ product.id }}<br>Type: {{ product.booktype }}<br>
@@ -54,7 +54,7 @@
                 </div>
                 {% if current_user.usertype == 'Admin' or current_user.usertype == 'Staff' %}
                 <div class="card-action">
-                    <h5><a href="{{ url_for('delete_product',id=product.id) }}" class="teal lighten-2">Remove</a></h5>
+                    <h5><a href="{{ url_for('delete_product',id=product.id) }}" class="green-text text-darken-2">Remove</a></h5>
                 </div>
                 {% endif %}
             </div>
@@ -64,7 +64,7 @@
         <div class="col l4">
             <div class="card">
                 <div class="card-action">
-                    <h5><a href="{{ url_for('add_product') }}" class="teal lighten-2">Add Product</a></h5>
+                    <h5><a href="{{ url_for('add_product') }}" class="green-text text-darken-2">Add Product</a></h5>
                 </div>
             </div>
         </div>

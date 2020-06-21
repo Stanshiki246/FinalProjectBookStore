@@ -34,6 +34,6 @@
     <div class="col l4"><a href="{{ url_for('payment_proof_form',id=order.id) }}" class="waves-effect waves-light btn" role="button">Pay</a></div>
     <div class="col l4"><a href="{{ url_for('cancel_order',id=order.id) }}" class="waves-effect waves-light btn" role="button">Cancel</a></div>
     {% endif %}
-    <div class="col l4"><a href="{{ url_for('my_order') }}" class="waves-effect waves-light btn" role="button">Back</a></div>
+    <div class="col l4"><a href="{{ url_for('my_order') }}" class="waves-effect waves-light btn green darken-2" role="button">Back</a></div>
 </div>
 {% endblock %}

@@ -2,5 +2,5 @@
 {% block content %}
 <h1>{{ product.title }}</h1>
 <iframe src="{{ url_for('static',filename='/novel/'+ product.title |replace(' ','_') +'.pdf') }}" width="800px" height="600px"></iframe>
-<p><a href="{{ url_for('my_library') }}" class="waves-effect waves-light btn" role="button">Back</a></p>
+<p><a href="{{ url_for('my_library') }}" class="waves-effect waves-light btn green darken-2" role="button">Back</a></p>
 {% endblock %}
