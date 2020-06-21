@@ -4,7 +4,7 @@
     <h1>Order Item List</h1>
     <h3>Username: {{ order.customer.username }}</h3>
 </div>
-<table class="table-bordered table-dark">
+<table class="black white-text highlight">
     <thead>
         <tr>
             <th>ID</th>
@@ -31,9 +31,9 @@
 </div>
 <div class="row">
     {% if order.status == 'Unpaid' %}
-    <div class="col-lg-4"><a href="{{ url_for('payment_proof_form',id=order.id) }}" class="btn btn-primary" role="button">Pay</a></div>
-    <div class="col-lg-4"><a href="{{ url_for('cancel_order',id=order.id) }}" class="btn btn-primary" role="button">Cancel</a></div>
+    <div class="col l4"><a href="{{ url_for('payment_proof_form',id=order.id) }}" class="waves-effect waves-light btn" role="button">Pay</a></div>
+    <div class="col l4"><a href="{{ url_for('cancel_order',id=order.id) }}" class="waves-effect waves-light btn" role="button">Cancel</a></div>
     {% endif %}
-    <div class="col-lg-4"><a href="{{ url_for('my_order') }}" class="btn btn-primary" role="button">Back</a></div>
+    <div class="col l4"><a href="{{ url_for('my_order') }}" class="waves-effect waves-light btn" role="button">Back</a></div>
 </div>
 {% endblock %}

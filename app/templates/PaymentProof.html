@@ -27,13 +27,13 @@
         {% endfor %}
     </div>
     <div class="row">
-        <div class="col-lg-4">
+        <div class="col l4">
             {{ form.hours.label }} {{ form.hours(size=32) }}<br>
             {% for error in form.hours.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </div>
-        <div class="col-lg-4">
+        <div class="col l4">
             {{ form.minutes.label }} {{ form.minutes(size=32) }}<br>
             {% for error in form.minutes.errors %}
             <span style="color: red;">[{{ error }}]</span>
@@ -42,7 +42,7 @@
     </div>
     <div>
         {{ form.submit() }}
-        <a href="{{ url_for('my_order') }}">Back</a>
+        <a href="{{ url_for('my_order') }}" class="waves-effect waves-light btn">Back</a>
     </div>
 </form>
 {% endblock %}

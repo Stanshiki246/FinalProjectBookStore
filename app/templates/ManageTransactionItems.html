@@ -4,7 +4,7 @@
     <h1>Manage Transaction Items</h1>
     <h3>Transaction ID: {{ transaction.id }}</h3>
 </div>
-<table class="table-bordered table-dark">
+<table class="black white-text highlight">
     <thead>
         <tr>
             <th>ID</th>
@@ -27,6 +27,6 @@
     </tbody>
 </table>
 <div class="row">
-    <div class="col-lg-4"><a href="{{ url_for('manage_transactions') }}" class="btn btn-primary" role="button">Back</a></div>
+    <div class="col l4"><a href="{{ url_for('manage_transactions') }}" class="waves-effect waves-light btn" role="button">Back</a></div>
 </div>
 {% endblock %}

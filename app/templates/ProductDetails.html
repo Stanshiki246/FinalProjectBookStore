@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<table class="table-bordered table-dark">
+<table class="black white-text highlight">
     <tr>
         <th>ID</th>
         <td>{{ product.id }}</td>
@@ -40,33 +40,33 @@
 </table>
 {% if current_user.usertype == 'Admin' or current_user.usertype == 'Staff' %}
 <div class="row">
-    <div class="col-lg-3"><a href="{{ url_for('edit_product',id=product.id) }}" class="btn btn-primary" role="button">Edit Details</a></div>
+    <div class="col l3"><a href="{{ url_for('edit_product',id=product.id) }}" class="waves-effect waves-light btn" role="button">Edit Details</a></div>
     {% if product.booktype == 'Comic' %}
-    <div class="col-lg-3"><a href="{{ url_for('comic_page_interface',id=product.id) }}" class="btn btn-primary" role="button">Comic Pages</a></div>
+    <div class="col l3"><a href="{{ url_for('comic_page_interface',id=product.id) }}" class="waves-effect waves-light btn" role="button">Comic Pages</a></div>
     {% endif %}
 </div>
 {% else %}
 <div class="row">
     {% if not library_customer.is_in_my_library(library_product) %}
     {% if not cart_customer.is_in_my_carts(cart_product) %}
-    <div class="col-lg-3"><a href="{{ url_for('add_into_cart',id=product.id) }}" role="button" class="btn btn-primary">
+    <div class="col l3"><a href="{{ url_for('add_into_cart',id=product.id) }}" role="button" class="waves-effect waves-light btn">
         Add into Cart</a></div>
     {% else %}
-    <div class="col-lg-3"><a href="{{ url_for('my_cart') }}" role="button" class="btn btn-primary">
+    <div class="col l3"><a href="{{ url_for('my_cart') }}" role="button" class="waves-effect waves-light btn">
         Check on My Cart</a></div>
     {% endif %}
     {% if customer is not none %}
     {% if not customer.is_in_wishlist(product) %}
-    <div class="col-lg-3"><a href="{{ url_for('add_into_wishlist',id=product.id) }}" role="button" class="btn btn-primary">Add to My Wish List</a></div>
+    <div class="col l3"><a href="{{ url_for('add_into_wishlist',id=product.id) }}" role="button" class="waves-effect waves-light btn">Add to My Wish List</a></div>
     {% else %}
-    <div class="col-lg-3"><a href="{{ url_for('my_wishlist') }}" role="button" class="btn btn-primary">Check on My Wish List</a></div>
+    <div class="col l3"><a href="{{ url_for('my_wishlist') }}" role="button" class="waves-effect waves-light btn">Check on My Wish List</a></div>
     {% endif %}
     {% endif %}
     {% else %}
-    <div class="col-lg-3">
-        <a href="{{ url_for('my_library') }}" class="btn btn-primary" role="button">Go To My Library</a></div>
+    <div class="col l3">
+        <a href="{{ url_for('my_library') }}" class="waves-effect waves-light btn" role="button">Go To My Library</a></div>
     {% endif %}
 </div>
 {% endif %}
-<div><a href="{{ url_for('index') }}" class="btn btn-primary" role="button">Back</a></div>
+<div><a href="{{ url_for('index') }}" class="waves-effect waves-light btn" role="button">Back</a></div>
 {% endblock %}

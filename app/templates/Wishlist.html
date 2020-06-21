@@ -3,7 +3,7 @@
 <div>
     <h1>My Wish List</h1>
 </div>
-<table class="table-bordered table-dark">
+<table class="black white-text highlight">
     <thead>
         <tr>
             <th>ID</th>
@@ -27,5 +27,5 @@
     {% endfor %}
     </tbody>
 </table>
-<p><a href="{{ url_for('index') }}" class="btn btn-primary" role="button">Back</a></p>
+<p><a href="{{ url_for('index') }}" class="waves-effect waves-light btn" role="button">Back</a></p>
 {% endblock %}

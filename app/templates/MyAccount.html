@@ -3,7 +3,7 @@
 <div>
     <h1>My Profile</h1>
 </div>
-<table class="table-borderless table-dark">
+<table class="black white-text">
     <tr>
         <th>Username</th>
         <td>{{ current_user.username }}</td>
@@ -25,8 +25,8 @@
         <td>{{ current_user.updated_at }}</td>
     </tr>
     <tr>
-        <td><a href="{{ url_for('update',id=current_user.id) }}" role="button" class="btn btn-primary">Edit</a></td>
-        <td><a href="{{ url_for('index') }}" role="button" class="btn btn-primary">Back</a></td>
+        <td><a href="{{ url_for('update',id=current_user.id) }}" role="button" class="waves-effect waves-light btn">Edit</a></td>
+        <td><a href="{{ url_for('index') }}" role="button" class="waves-effect waves-light btn">Back</a></td>
     </tr>
 </table>
 {% endblock %}
